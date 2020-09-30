@@ -3,16 +3,16 @@ import cv2
 import pandas as pd 
 import numpy as np 
 
-target_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTracking\GlassTest4\\"
+target_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTracking\GlassTest6\\"
 image_name = "GlassTest"
-first_frame = 4000001
-final_frame = 4000003
+first_frame = 6000001
+final_frame = 6000298
 
 particle_ID = 0
 frame_rate = 1500
 focus_jet = 3
 save_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTracking\RawTrackResults\\"
-file_name = "GlassTest4"
+file_name = "GlassTest6_0"
 
 particle_ID = 0
 
@@ -29,13 +29,21 @@ def click_and_crop(event, x, y, flags, param):
     mouse_release = False
 
     if event == cv2.EVENT_LBUTTONDOWN:
-	    refPt = [x, y]
-
-    elif event == cv2.EVENT_LBUTTONUP:
+        refPt = [x, y]
         mouse_release = True
 
+    #if event == cv2.EVENT_LBUTTONUP:
+        
 
-for i in np.arange(first_frame,final_frame,1):
+frames = np.arange(first_frame,final_frame,1)
+frames = np.nditer(frames, flags=['f_index'])
+tracking = True
+while tracking:
+    try:
+        i = next(frames)
+    except StopIteration:
+        tracking = False
+        break
     filename = target_folder + image_name + str(i) + ".tif"
     image = cv2.imread(filename)
     clone = image.copy()
@@ -56,6 +64,11 @@ for i in np.arange(first_frame,final_frame,1):
 
         if key == ord("n"):
             break
+
+        if key == ord("q"):
+            tracking = False
+            break
+
     cv2.destroyAllWindows()
 
 
