@@ -3,18 +3,19 @@ import cv2
 import pandas as pd 
 import numpy as np 
 
-target_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTracking\GlassTest6\\"
+target_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTracking\GlassTest8\\"
 image_name = "GlassTest"
-first_frame = 6000001
-final_frame = 6000298
+first_frame = 8000001
+final_frame = 8000430
 
-particle_ID = 0
-frame_rate = 1500
-focus_jet = 3
+particle_ID = 2
+file_name = "GlassTest8" + str(particle_ID)
+
+
+frame_rate = 1000
+focus_jet = 6
 save_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTracking\RawTrackResults\\"
-file_name = "GlassTest6_0"
 
-particle_ID = 0
 
 frame_nums = []
 x_coords = []
@@ -36,17 +37,22 @@ def click_and_crop(event, x, y, flags, param):
         
 
 frames = np.arange(first_frame,final_frame,1)
-frames = np.nditer(frames, flags=['f_index'])
+#frames = np.nditer(frames, flags=['f_index'])
 tracking = True
+i=0
 while tracking:
     try:
-        i = next(frames)
+        i = i+1
+        frame = frames[i]
     except StopIteration:
         tracking = False
         break
-    filename = target_folder + image_name + str(i) + ".tif"
+    filename = target_folder + image_name + str(frame) + ".tif"
     image = cv2.imread(filename)
-    clone = image.copy()
+    try:
+        clone = image.copy()
+    except AttributeError:
+        continue
     cv2.namedWindow("image")
     cv2.setMouseCallback("image", click_and_crop)
     # keep looping until the 'q' key is pressed
@@ -57,12 +63,16 @@ while tracking:
         key = cv2.waitKey(1) & 0xFF
 
         if mouse_release:
-            frame_nums.append(i)
+            frame_nums.append(frame)
             x_coords.append(refPt[0])
             y_coords.append(refPt[1])
             break
 
         if key == ord("n"):
+            break
+
+        if key == ord("b"):
+            i = i-2
             break
 
         if key == ord("q"):
