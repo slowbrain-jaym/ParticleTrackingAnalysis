@@ -8,7 +8,8 @@ write_folder = r"C:\Users\jamen\Google Drive\Everything\Results\P1\ParticleTrack
 dfs = []
 for i in range(len(filenames)):
     df = pd.read_csv(target_folder + filenames[i])
-    df["Test ID"] = test_numbers[i]
+    df["Experiment ID"] = test_numbers[i]
+    df["Particle Index"] = i
     dfs.append(df)
 
 combined_df = pd.concat(dfs)
